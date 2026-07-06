@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Love buat Jiel</title>
-  <!-- Hanya load Pacifico untuk teks pinggiran hati -->
+  <!-- Kita cuma perlu load Pacifico untuk teks kelilingnya aja -->
   <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
   <style>
     html,body{
@@ -48,10 +48,12 @@
   function draw(){
     ctx.clearRect(0,0,W,H);
     
-    // --- 1. TEKS TENGAH (Comic Sans) ---
+    // --- 1. TEKS TENGAH (Comic Sans - Santai & Menggemaskan) ---
     ctx.save();
     ctx.translate(W/2, H/2 - 15); 
-    ctx.font = "bold 19px 'Comic Sans MS', 'Comic Sans', sans-serif"; 
+    
+    // Pakai Comic Sans MS dengan ketebalan bold biar makin jelas terbaca
+    ctx.font = "bold 19px 'Comic Sans MS', 'Comic Sans', cursive"; 
     ctx.fillStyle = "#ffffff";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
@@ -80,7 +82,7 @@
       ctx.save();
       ctx.translate(x, y);
       
-      ctx.font = "1.2px 'Pacifico', cursive, sans-serif";
+      ctx.font = "1.2px 'Pacifico'";
       ctx.textAlign = "center";
       
       const gradient = ctx.createLinearGradient(-2, 0, 2, 0);
@@ -105,8 +107,9 @@
     requestAnimationFrame(draw);
   }
 
-  // DIUBAH: Langsung jalankan fungsi draw() tanpa nunggu font biar anti-blank/layar putih di HP
-  draw();
+  document.fonts.ready.then(() => {
+    draw();
+  });
 </script>
 </body>
 </html>
