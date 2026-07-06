@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Love buat Jiel</title>
+  <!-- Hanya load Pacifico untuk teks pinggiran hati -->
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+  <style>
+    html,body{
+      height:100%;
+      margin:0;
+      background:#000;
+      display:grid;
+      place-items:center;
+      overflow: hidden;
+    }
+    canvas{
+      background:#000;
+      display:block;
+    }
+  </style>
+</head>
+<body>
+<canvas id="loveCanvas" width="600" height="600"></canvas>
+<script>
+  const canvas = document.getElementById("loveCanvas");
+  const ctx = canvas.getContext("2d");
+  const W = canvas.width;
+  const H = canvas.height;
+
+  function heart(t) {
+    const x = 16 * Math.pow(Math.sin(t), 3);
+    const y = 13 * Math.cos(t)
+            - 5 * Math.cos(2*t)
+            - 2 * Math.cos(3*t)
+            - Math.cos(4*t);
+    return [x, -y];
+  }
+
+  let time = 0;
+  const texts = [];
+  const total = 45; 
+  for (let i = 0; i < total; i++) {
+    texts.push({ offset: i * (2 * Math.PI / total) });
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    
+    // --- 1. TEKS TENGAH (Comic Sans) ---
+    ctx.save();
+    ctx.translate(W/2, H/2 - 15); 
+    ctx.font = "bold 19px 'Comic Sans MS', 'Comic Sans', sans-serif"; 
+    ctx.fillStyle = "#ffffff";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    
+    const lines = [
+      "gimana hari ini jiel?",
+      "ada yang mau di ceritain ga?"
+    ];
+    const lineHeight = 30; 
+    
+    lines.forEach((line, index) => {
+      const centerWave = Math.sin(time / 50) * 2; 
+      const yOffset = (index - 0.5) * lineHeight + centerWave;
+      ctx.fillText(line, 0, yOffset);
+    });
+    ctx.restore();
+
+    // --- 2. TEKS KELILING BENTUK HATI ---
+    ctx.save();
+    ctx.translate(W/2, H/2);
+    ctx.scale(14, 14); 
+    
+    texts.forEach((txt, i) => {
+      const t = (time / 1000 + txt.offset) % (2 * Math.PI);
+      const [x, y] = heart(t);
+      ctx.save();
+      ctx.translate(x, y);
+      
+      ctx.font = "1.2px 'Pacifico', cursive, sans-serif";
+      ctx.textAlign = "center";
+      
+      const gradient = ctx.createLinearGradient(-2, 0, 2, 0);
+      gradient.addColorStop(0, "#ffffff");   
+      gradient.addColorStop(0.5, "#ff4d6d"); 
+      gradient.addColorStop(1, "#ff0000");   
+      ctx.fillStyle = gradient;
+      
+      const text = "haiii jieell";
+      for (let j = 0; j < text.length; j++) {
+        const waveY = Math.sin(time / 30 + j + i) * 0.25;
+        ctx.save();
+        ctx.translate(j * 0.65 - 3.2, waveY); 
+        ctx.fillText(text[j], 0, 0);
+        ctx.restore();
+      }
+      ctx.restore();
+    });
+    ctx.restore();
+    
+    time += 1; 
+    requestAnimationFrame(draw);
+  }
+
+  // DIUBAH: Langsung jalankan fungsi draw() tanpa nunggu font biar anti-blank/layar putih di HP
+  draw();
+</script>
+</body>
+</html>
